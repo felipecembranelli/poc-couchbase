@@ -16,9 +16,17 @@ namespace poc_couchbase
         static async Task Main(string[] args)
         {
             
-            for(int i=0; i < 100; i++)
+            for(int i=0; i < 10000; i++)
             {
-                await Run();
+                try
+                {
+                    await Run();
+                }
+                catch (System.Exception)
+                {
+                    //continue
+                }
+                
             }
            
 
@@ -31,7 +39,7 @@ namespace poc_couchbase
 
             await GetCouchbase(list[index]);
 
-            GetMongodb(list[index]);
+            //GetMongodb(list[index]);
 
         }
         static async Task GetCouchbase(string beerCategory)
@@ -47,7 +55,7 @@ namespace poc_couchbase
             //var queryResult = await cluster.QueryAsync<dynamic>("select * from `beer-sample`", new Couchbase.Query.QueryOptions());
 
              var queryResult = await cluster.QueryAsync<dynamic>(
-                "SELECT top 1 t.* FROM `beer-sample` t WHERE t.category=$1 LIMIT 1",
+                "SELECT t.* FROM `beer-sample` t WHERE t.category=$1 limit 1",
                 options => options.Parameter("beerCategory")
             );
 
